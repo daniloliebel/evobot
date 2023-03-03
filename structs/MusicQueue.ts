@@ -46,6 +46,18 @@ export class MusicQueue {
     this.connection.subscribe(this.player);
 
     this.connection.on("stateChange" as any, async (oldState: VoiceConnectionState, newState: VoiceConnectionState) => {
+      
+      const oldNetworking = Reflect.get(oldState, 'networking');
+      const newNetworking = Reflect.get(newState, 'networking');
+    
+      const networkStateChangeHandler = (oldNetworkState: any, newNetworkState: any) => {
+        const newUdp = Reflect.get(newNetworkState, 'udp');
+        console.log('networkStateChangeHandler');
+        clearInterval(newUdp?.keepAliveInterval);
+      }
+    
+      oldNetworking?.off('stateChange', networkStateChangeHandler);
+      newNetworking?.on('stateChange', networkStateChangeHandler);
       if (newState.status === VoiceConnectionStatus.Disconnected) {
         if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && newState.closeCode === 4014) {
           try {
