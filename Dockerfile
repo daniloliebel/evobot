@@ -1,6 +1,6 @@
 FROM node:16.14
 
-ENV USER=evobot
+ENV USER=root
 
 # install python and make
 RUN apt-get update && \
@@ -8,17 +8,17 @@ RUN apt-get update && \
 	apt-get purge -y --auto-remove
 
 # create evobot user
-RUN groupadd -r ${USER} && \
-	useradd --create-home --home /home/evobot -r -g ${USER} ${USER}
+RUN groupadd -r root && \
+	useradd --create-home --home /home/evobot -r -g root root
 
 # set up volume and user
 USER ${USER}
 WORKDIR /home/evobot
 
-COPY --chown=${USER}:${USER} package*.json ./
+COPY --chown=root:root package*.json ./
 RUN npm install
 VOLUME [ "/home/evobot" ]
 
-COPY --chown=${USER}:${USER}  . .
+COPY --chown=root:root  . .
 
 ENTRYPOINT [ "npm", "run", "prod" ]
