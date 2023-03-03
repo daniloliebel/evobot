@@ -8,11 +8,11 @@ RUN apt-get update && \
 	apt-get purge -y --auto-remove
 
 # create evobot user
-RUN groupadd -r root && \
-	useradd --create-home --home /home/evobot -r -g root root
+#RUN groupadd -r root && \
+#	useradd --create-home --home /home/evobot -r -g root root
 
 # set up volume and user
-USER ${USER}
+USER root
 WORKDIR /home/evobot
 
 COPY --chown=root:root package*.json ./
